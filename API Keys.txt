@@ -1,0 +1,6 @@
+ Openexchangerates API Key
+
+29b04a09d4da4c98b23b6e1f1aa8112c
+
+
+https://openexchangerates.org/account
