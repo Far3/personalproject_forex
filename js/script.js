@@ -1,4 +1,6 @@
-$(document).ready(function(){
+function initMap(){
+
+var $overlay;
 
 var forexData = {
   "US": 1,
@@ -21,70 +23,71 @@ $.ajax({
     dataType: 'jsonp',
     success: function(json) {
         
-        console.log(json);
-        console.log(json.base);
-        console.log(forexData);
+      console.log(json);
+      console.log(json.base);
+      console.log(forexData);
 
-  $('#world-map').vectorMap({
-    map: 'world_mill_en',    
-    series: {
-    regions: [{
-      values: forexData,
-      scale: ['#C8EEFF', '#0071A4'],
-      normalizeFunction: 'polynomial'
-    }]
-   },
-      onRegionTipShow: function(e, el, code){
+      $('#world-map').vectorMap({
+        map: 'world_mill_en',    
+        series: {
+          regions: [{
+            values: forexData,
+            scale: ['#C8EEFF', '#0071A4'],
+            normalizeFunction: 'polynomial'
+          }]
+        },
+        onRegionTipShow: function(e, el, code){
           var map = $('#world-map').vectorMap('get', 'mapObject');
           var name = map.getRegionName(code);
           var currency = map.getCurrency(code);          
       
           el.html(el.html() + ' (1 USD to ' + forexData[code] +' '+ currency +' conversion)');
-  },
+        },
+        onRegionClick: function(e,code){
+            var map = $('#world-map').vectorMap('get', 'mapObject');
+            var region = map.getRegion(code);
+            var currency = map.getCurrency(code);          
 
-      onRegionClick: function(e,code){
-          var map = $('#world-map').vectorMap('get', 'mapObject');
-          var region = map.getRegion(code);
+            //console.log("Country Code: " + code);
+            //console.log("Country Name: " + region.name);
+            console.log("Region %s %o", code,  region);
+            //console.log("Currency Code: " + region.currency);
+            console.log(json.rates[currency]);
 
-          console.log("Country Code: " + code);
-          console.log("Country Name: " + region.name);
-          console.log("Currency Code: " + region.currency);
-          console.log(json.rates[currency]);
+            if ($overlay != null) {
+               $overlay.remove();
+            }
 
+            //TODO move over to templated format with handlebars.
+            $overlay = $('<div class="overlay"></div>');
+            var $overlayClose = $('<div class="overlay-close"></div>');
+            var $forexInfo =$(
+            '<ul>' +
+                '<li>USD to ' + currency +': '+ json.rates[currency] + '</ul>' + 
+            '</ul>');
 
-          //TODO move over to templated format with handlebars.
-          var $overlay = $('<div class="overlay"></div>');
-          var $overlayClose = $('<div class="overlay-close"></div>');
-          var $forexInfo =$(
-          '<ul>' +
-              '<li>USD to ' + currency +': '+ json.rates[currency] + '</ul>' + 
-  
-
-          '</ul>');
-
-          //Show overlay
-          $("body").append($overlay);
-          $overlay.append($forexInfo);
-          $overlay.show();
- 
-          $("body").append($overlayClose);
-          $overlayClose.show();
+            //Show overlay
+            $("body").append($overlay);
+            $overlay.append($forexInfo);
+            $overlay.show();
+   
+            $overlay.append($overlayClose);
+            //$overlayClose.show();
 
 
-          //Hide the overlay.
-          $overlayClose.click(function(){
-          $overlay.remove();
-          $overlayClose.remove();
-          $overlay.empty();
-          
+            //Hide the overlay.
+            $overlayClose.click(function(){
+              $overlay.remove();
+              //$overlayClose.remove();
+              //$overlay.empty();
+            });
 
- });
+        }
+    });
 
   }
 });
 
-    }
-});
 
+}
 
-});//end ready

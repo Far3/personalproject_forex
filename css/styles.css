@@ -20,8 +20,8 @@
 
   .overlay-close{
   	position:absolute;
-  	top:320px;
-  	right:810px;
+  	top:10px;
+  	right:10px;
   	z-index:2;
   	width:17px;
   	height:17px;
