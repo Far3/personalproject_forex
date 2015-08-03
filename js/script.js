@@ -54,11 +54,13 @@ $.ajax({
             //console.log("Currency Code: " + region.currency);
             console.log(json.rates[currency]);
 
+            console.log(fx.convert(10, {from: 'USD', to: 'CAD'}))
+
+
             if ($overlay != null) {
                $overlay.remove();
             }
 
-            //TODO move over to templated format with handlebars.
             $overlay = $('<div class="overlay"></div>');
             var $overlayClose = $('<div class="overlay-close"></div>');
             var $forexInfo =$(
@@ -66,9 +68,17 @@ $.ajax({
                 '<li>USD to ' + currency +': '+ json.rates[currency] + '</ul>' + 
             '</ul>');
 
+            var $conversionCalc = $(
+                '<form>' +
+                  '<input type="number" >' +
+                  '<input type="number" name="lastname">'  +
+                '</form>'
+
+              );
             //Show overlay
             $("body").append($overlay);
             $overlay.append($forexInfo);
+            $overlay.append($conversionCalc);
             $overlay.show();
    
             $overlay.append($overlayClose);
