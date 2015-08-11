@@ -1,16 +1,6 @@
-function sideMenu(){
- $('.toggle').on('click',function(){
-  console.log('side button clicked');
-  $('.menu').animate({width:'toggle'},350);
-});
-}
-
-
- 
-
 function initMap(){
-var $overlay;
 
+var $overlay;
 
 var forexData = {
   "US": 1,
@@ -25,6 +15,54 @@ var forexData = {
   "EUR": .9,
   "JP":0.96
 };
+
+var App = function(){
+  this.$overlay = $('<div class="overlay"></div>');
+};
+
+App.prototype.init = function(){
+//Major function calls
+  this.bindEvents();
+};
+
+App.prototype.initMap = function() {
+  //call initial ajax setup
+  var appId = '29b04a09d4da4c98b23b6e1f1aa8112c';
+  $.ajax({
+    url: 'https://openexchangerates.org/api/latest.json?app_id=' + appId,
+    datatype: 'same',
+    success: $.proxy(this.initMapSuccess, this),
+    onRegionTipShow: 
+  });
+};
+
+App.prototype.bindEvents = function(){
+//jQuery statements. Listen for onRegionTipShow etc.
+  // listeners for various events
+  $('submit').click($.proxy(this.convertFunds, this));
+};
+
+App.prototype.convertFunds = function(funds) {
+  //business logic to convert funds
+};
+
+App.prototype.initMapSuccess = function(json) {
+    console.log(json);
+      console.log(json.base);
+      console.log(forexData);
+
+      $('#world-map').vectorMap({
+        map: 'world_mill_en',    
+        series: {
+          regions: [{
+            values: forexData,
+            scale: ['#C8EEFF', '#0071A4'],
+            normalizeFunction: 'polynomial'
+          }]
+        };
+};
+
+
 //My App ID: 29b04a09d4da4c98b23b6e1f1aa8112c
 // Use jQuery.ajax to get the latest exchange rates, with JSONP:
 var appId = '29b04a09d4da4c98b23b6e1f1aa8112c';
@@ -58,10 +96,7 @@ $.ajax({
             var region = map.getRegion(code);
             var currency = map.getCurrency(code);          
 
-            //console.log("Country Code: " + code);
-            //console.log("Country Name: " + region.name);
             console.log("Region %s %o", code,  region);
-            //console.log("Currency Code: " + region.currency);
             console.log(json.rates[currency]);
 
             if ($overlay != null) {
@@ -75,53 +110,19 @@ $.ajax({
                 '<li>USD to ' + currency +': '+ json.rates[currency] + '</ul>' + 
             '</ul>');
 
-            
-               
+            var $conversionCalc = $(
+                '<form>' +
+                  '<input type="number" placeholder="USD">' +
+                  '<input type="number" placeholder=' + currency +'>' +
+                '</form>'
 
-                
-
-
-                var $conversionCalc =$(
-                  '<input type="number" class="input1" value="0">' + ' USD' + '</input>' +
-                  '<input type="number" class="output1" value="0">' + currency + '</input>'
-);              
-
+              );
             //Show overlay
             $("body").append($overlay);
             $overlay.append($forexInfo);
             $overlay.append($conversionCalc);
             $overlay.show();
-
-              //Multiple Amount Conversion
-            var input1 = $('.input1');
-            var output1 = $('.output1');
-
-              input1.bind('input',function(e){
-                if(e.currentTarget.value == ''){
-                  output1.val('');
-                }
-                else {
-                  output1.val(convertfromUSD(e.target.value));
-                }
-              });
-
-              output1.bind('input',function(e){
-                if(e.currentTarget.value == ''){
-                  input1.val('');
-                }
-                else{
-                  input1.val(converttoUSD(e.target.value));
-                }
-              });
-              
-              function convertfromUSD(input1){
-                  return input1 * json.rates[currency];
-              }
-
-              function converttoUSD(output1){
-                  return output1 *  1/json.rates[currency];
-              }
-
+   
             $overlay.append($overlayClose);
             //$overlayClose.show();
 
@@ -141,3 +142,4 @@ $.ajax({
 
 
 }
+

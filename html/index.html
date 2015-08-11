@@ -7,12 +7,23 @@
 	</head>
 
 	<body>
-	<div id="world-map" ></div>
+	<div class="container">
+		<div id="world-map" ></div>
 
+		<div class="toggle-contain">
+		<div class="toggle"></div>
 
+		<div class="menu">
+		  <ul>
+		    <li>menu&nbsp;item</li>
+		    <li>menu&nbsp;item</li>
+		  </ul> 
+		</div>
+		</div>
  
 
 
+	</div>
 	<script src="../js/jquery-2.1.4.js"></script>
 	<script src="../js/jquery-jvectormap-2.0.2.min.js"></script>
 	<script src="../js/jquery-jvectormap-world-mill-en.js"></script>
@@ -22,8 +33,11 @@
 
 	<script>
 		$(document).ready(function() {
-			initMap();
-		});//end ready
+ 			initMap();
+			sideMenu();
+ 			//var app = new App().init();
+
+		});
 	</script>
 
 

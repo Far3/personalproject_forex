@@ -28,10 +28,46 @@
   	background: url("../assets/close2.png") no-repeat center center;
   	background-size:contain;
   	opacity:.35;
-  	transition: 0.1s linear;
   	cursor:pointer;
   }
 
 ul{
   	list-style-type: none;
   }
+
+
+
+/*toggle*/
+.toggle{
+  position: absolute;
+  right:20px;
+  top:20px;
+  padding-left: 1.25em;
+  cursor: pointer;
+}
+.toggle:before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  width: 1em;
+  height: 0.15em;
+  background: #fff;
+  box-shadow: 
+    0 0.25em 0 0  #fff,
+    0 0.5em 0 0  #fff;
+    z-index: 5;  
+}
+.menu{
+  display: none;
+  position: fixed;
+  top:10px;
+  right:10px;
+  background:#e8e8e8;
+  width:25%; /*or whaever you like*/
+  height: 100%;
+}
+
+.menu li:hover{
+  background:#ccc;
+}
